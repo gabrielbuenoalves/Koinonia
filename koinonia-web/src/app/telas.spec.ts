@@ -5,7 +5,7 @@ import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { PlanejamentoComponent } from 'planejamento';
 import { FechamentoComponent, PontoComponent, papelDoEspelho } from 'ponto';
-import { CampoComponent, PeriodoComponent } from 'ui';
+import { API_URL, CampoComponent, PeriodoComponent } from 'ui';
 import { App } from './app';
 import { apiUrl } from './api-url';
 import { cabecalhosInterceptor } from './cabecalhos.interceptor';
@@ -80,6 +80,7 @@ describe('guard de gestao', () => {
         provideRouter(routes),
         provideHttpClient(withInterceptors([cabecalhosInterceptor])),
         provideHttpClientTesting(),
+        { provide: API_URL, useValue: apiUrl },
       ],
     });
     http = TestBed.inject(HttpTestingController);
@@ -183,6 +184,7 @@ describe('planejamento', () => {
       providers: [
         provideHttpClient(withInterceptors([cabecalhosInterceptor])),
         provideHttpClientTesting(),
+        { provide: API_URL, useValue: apiUrl },
       ],
     });
     http = TestBed.inject(HttpTestingController);
@@ -311,6 +313,7 @@ describe('ponto e fechamento', () => {
         provideRouter(routes),
         provideHttpClient(withInterceptors([cabecalhosInterceptor])),
         provideHttpClientTesting(),
+        { provide: API_URL, useValue: apiUrl },
       ],
     });
     http = TestBed.inject(HttpTestingController);
@@ -356,6 +359,36 @@ describe('ponto e fechamento', () => {
     expect(saida.request.body).toEqual({ saida: '2026-10-06T19:00:00-03:00' });
     saida.flush('');
     http.expectOne(`${apiUrl}/espelho/${ana}/2026-10-06`).flush(JSON.stringify({ aprovado: false, trechos: [] }));
+  });
+
+  it('saida recusada apaga a entrada recem-criada', () => {
+    sessionStorage.setItem('koinonia.papel', 'Empregado');
+    sessionStorage.setItem('koinonia.funcionarioId', ana);
+    const fixture = TestBed.createComponent(PontoComponent);
+    fixture.detectChanges();
+    preencher(fixture.nativeElement, 'Dia', '2026-10-06');
+    clicar(fixture.nativeElement, 'Carregar');
+    http.expectOne(`${apiUrl}/espelho/${ana}/2026-10-06`).flush(JSON.stringify({ aprovado: false, trechos: [] }));
+    fixture.detectChanges();
+
+    const batida = formulario(fixture, 'Batida');
+    preencher(batida, 'Início', '2026-10-06T08:00');
+    preencher(batida, 'Fim', '2026-10-06T19:00');
+    clicar(fixture.nativeElement, 'registrar');
+
+    const id = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
+    http.expectOne(`${apiUrl}/batidas/entrada`).flush(JSON.stringify({ id }));
+    http
+      .expectOne(`${apiUrl}/batidas/${id}/saida`)
+      .flush('Saída anterior à entrada.', { status: 422, statusText: 'Unprocessable Entity' });
+
+    const apagar = http.expectOne(`${apiUrl}/batidas/${id}`);
+    expect(apagar.request.method).toBe('DELETE');
+    expect(fixture.nativeElement.textContent).not.toContain('Saída anterior à entrada.');
+    apagar.flush('');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Saída anterior à entrada.');
   });
 
   it('mostra estado vazio quando o espelho nao tem trechos', () => {

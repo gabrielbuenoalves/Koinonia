@@ -1,8 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { CampoComponent, EstadoVazioComponent, PeriodoComponent } from 'ui';
-import { apiUrl } from '../../../../src/app/api-url';
+import { API_URL, CampoComponent, EstadoVazioComponent, PeriodoComponent } from 'ui';
 import { EspelhoComponent } from './espelho.component';
 import { EstadoEspelho, Papel, papelDoEspelho } from './espelho-acoes';
 
@@ -73,6 +72,7 @@ interface EspelhoResposta {
 export class PontoComponent {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly apiUrl = inject(API_URL);
 
   funcionarioId = sessionStorage.getItem('koinonia.funcionarioId') ?? '';
   dia = '';
@@ -93,7 +93,7 @@ export class PontoComponent {
     }
     this.erro = '';
     this.http
-      .get(`${apiUrl}/espelho/${this.funcionarioId}/${this.dia}`, { responseType: 'text' })
+      .get(`${this.apiUrl}/espelho/${this.funcionarioId}/${this.dia}`, { responseType: 'text' })
       .subscribe({
         next: (texto) => {
           const corpo = JSON.parse(texto) as EspelhoResposta;
@@ -120,19 +120,26 @@ export class PontoComponent {
   private registrar() {
     this.erro = '';
     this.http
-      .post(`${apiUrl}/batidas/entrada`, { entrada: comFusoDeSaoPaulo(this.entrada) }, { responseType: 'text' })
+      .post(`${this.apiUrl}/batidas/entrada`, { entrada: comFusoDeSaoPaulo(this.entrada) }, { responseType: 'text' })
       .subscribe({
         next: (texto) => {
           const corpo = JSON.parse(texto) as { id: string };
           this.http
-            .post(`${apiUrl}/batidas/${corpo.id}/saida`, { saida: comFusoDeSaoPaulo(this.saida) }, { responseType: 'text' })
+            .post(`${this.apiUrl}/batidas/${corpo.id}/saida`, { saida: comFusoDeSaoPaulo(this.saida) }, { responseType: 'text' })
             .subscribe({
               next: () => this.carregar(),
-              error: (erro: HttpErrorResponse) => this.mostrar(erro),
+              error: (erro: HttpErrorResponse) => this.descartarEntrada(corpo.id, erro),
             });
         },
         error: (erro: HttpErrorResponse) => this.mostrar(erro),
       });
+  }
+
+  private descartarEntrada(id: string, erro: HttpErrorResponse) {
+    this.http.delete(`${this.apiUrl}/batidas/${id}`, { responseType: 'text' }).subscribe({
+      next: () => this.mostrar(erro),
+      error: () => this.mostrar(erro),
+    });
   }
 
   private aprovar() {
@@ -145,7 +152,7 @@ export class PontoComponent {
 
   private enviarDia(metodo: 'post' | 'delete') {
     this.erro = '';
-    const url = `${apiUrl}/dias/${this.funcionarioId}/${this.dia}/aprovacao`;
+    const url = `${this.apiUrl}/dias/${this.funcionarioId}/${this.dia}/aprovacao`;
     const pedido =
       metodo === 'post'
         ? this.http.post(url, null, { responseType: 'text' })
@@ -195,6 +202,7 @@ function comFusoDeSaoPaulo(valor: string): string {
 })
 export class FechamentoComponent {
   private readonly http = inject(HttpClient);
+  private readonly apiUrl = inject(API_URL);
 
   inicio = '';
   fim = '';
@@ -204,7 +212,7 @@ export class FechamentoComponent {
   baixar(evento: Event) {
     evento.preventDefault();
     this.erro = '';
-    const url = `${apiUrl}/fechamento?inicio=${this.inicio}&fim=${this.fim}&formato=${this.formato}`;
+    const url = `${this.apiUrl}/fechamento?inicio=${this.inicio}&fim=${this.fim}&formato=${this.formato}`;
     this.http.get(url, { responseType: 'blob', observe: 'response' }).subscribe({
       next: (resposta) => this.salvar(resposta),
       error: () => {

@@ -50,6 +50,9 @@ public sealed class RepositorioDePonto : IRepositorioDePonto
     public void Salvar(DiaDePonto dia)
     {
         var row = _contexto.Dias.FirstOrDefault(item => item.FuncionarioId == dia.FuncionarioId.Valor && item.Dia == dia.Dia);
+        if (row is { Aprovado: true } && dia.Aprovado)
+            throw new ViolacaoDeRegra("Aprovar um dia já aprovado é recusado.");
+
         if (row is null)
         {
             row = new DiaRow { Id = Guid.NewGuid(), FuncionarioId = dia.FuncionarioId.Valor, Dia = dia.Dia };

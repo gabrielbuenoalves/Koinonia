@@ -7,7 +7,10 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": []
+    "types": [],
+    "paths": {
+      "ui": ["./src/ui-shim.ts"]
+    }
   },
   "include": [
     "src/**/*.ts"

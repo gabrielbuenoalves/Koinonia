@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject } from '@angular/core';
-import { CampoComponent, EstadoVazioComponent, PeriodoComponent } from 'ui';
-import { apiUrl } from '../../../../src/app/api-url';
+import { API_URL, CampoComponent, EstadoVazioComponent, PeriodoComponent } from 'ui';
 
 interface Funcionario {
   id: string;
@@ -88,6 +87,7 @@ interface Funcionario {
 })
 export class PlanejamentoComponent implements OnInit {
   private readonly http = inject(HttpClient);
+  private readonly apiUrl = inject(API_URL);
 
   nome = '';
   funcionarios: Funcionario[] = [];
@@ -113,7 +113,7 @@ export class PlanejamentoComponent implements OnInit {
     evento.preventDefault();
     this.erro = '';
     this.http
-      .post(`${apiUrl}/funcionarios`, { nome: this.nome }, { responseType: 'text' })
+      .post(`${this.apiUrl}/funcionarios`, { nome: this.nome }, { responseType: 'text' })
       .subscribe({
         next: () => this.carregarFuncionarios(),
         error: (erro: HttpErrorResponse) => this.mostrar(erro),
@@ -125,7 +125,7 @@ export class PlanejamentoComponent implements OnInit {
     this.erro = '';
     this.http
       .put(
-        `${apiUrl}/escalas`,
+        `${this.apiUrl}/escalas`,
         {
           funcionarioId: this.funcionarioEscala,
           dia: this.diaEscala,
@@ -142,7 +142,7 @@ export class PlanejamentoComponent implements OnInit {
   removerEscala() {
     this.erro = '';
     this.http
-      .delete(`${apiUrl}/escalas/${this.funcionarioEscala}/${this.diaEscala}`, { responseType: 'text' })
+      .delete(`${this.apiUrl}/escalas/${this.funcionarioEscala}/${this.diaEscala}`, { responseType: 'text' })
       .subscribe({
         next: () => undefined,
         error: (erro: HttpErrorResponse) => this.mostrar(erro),
@@ -154,7 +154,7 @@ export class PlanejamentoComponent implements OnInit {
     this.erro = '';
     this.http
       .post(
-        `${apiUrl}/eventos`,
+        `${this.apiUrl}/eventos`,
         {
           nome: this.nomeEvento,
           inicio: comFusoDeSaoPaulo(this.inicioEvento),
@@ -177,7 +177,7 @@ export class PlanejamentoComponent implements OnInit {
     this.erro = '';
     this.http
       .put(
-        `${apiUrl}/percentual-extra-comum`,
+        `${this.apiUrl}/percentual-extra-comum`,
         { valor: Number(this.percentualInstitucional) },
         { responseType: 'text' },
       )
@@ -207,7 +207,7 @@ export class PlanejamentoComponent implements OnInit {
   }
 
   private carregarFuncionarios() {
-    this.http.get(`${apiUrl}/funcionarios`, { responseType: 'text' }).subscribe({
+    this.http.get(`${this.apiUrl}/funcionarios`, { responseType: 'text' }).subscribe({
       next: (texto) => {
         const lista = JSON.parse(texto) as Funcionario[];
         this.funcionarios = lista;

@@ -45,10 +45,39 @@ public class RepositorioDePontoTestes : IDisposable
     }
 
     [Fact]
+    public void Segunda_aprovacao_do_mesmo_dia_e_recusada()
+    {
+        var dia = new DateOnly(2026, 10, 6);
+        _repositorio.Salvar(DiaAprovado(dia));
+
+        var erro = Assert.Throws<ViolacaoDeRegra>(() => _repositorio.Salvar(DiaAprovado(dia)));
+        Assert.Equal("Aprovar um dia já aprovado é recusado.", erro.Message);
+
+        var guardado = _repositorio.ObterOuAbrir(_pessoa, dia);
+        Assert.True(guardado.Aprovado);
+        Assert.Equal(50m, Assert.Single(guardado.Trechos).Percentual);
+
+        var reaberto = DiaDePonto.Reidratar(_pessoa, dia, true, guardado.Trechos);
+        reaberto.Reabrir();
+        _repositorio.Salvar(reaberto);
+        Assert.False(_repositorio.ObterOuAbrir(_pessoa, dia).Aprovado);
+    }
+
+    [Fact]
     public void Nao_ha_chave_estrangeira_para_planejamento()
     {
         var modelo = _contexto.Model.GetEntityTypes().SelectMany(item => item.GetForeignKeys());
         Assert.DoesNotContain(modelo, chave => chave.PrincipalEntityType.Name.Contains("Planejamento") || chave.PrincipalEntityType.Name.Contains("Evento"));
+    }
+
+    private DiaDePonto DiaAprovado(DateOnly dia)
+    {
+        var aberto = DiaDePonto.Abrir(_pessoa, dia);
+        aberto.Aprovar(
+        [
+            new TrechoClassificado(new IntervaloMinutos(18 * 60, 19 * 60), Fatia.ExtraComum, null, null, null, 50m)
+        ]);
+        return aberto;
     }
 
     public void Dispose()
