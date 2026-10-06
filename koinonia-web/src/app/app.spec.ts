@@ -18,10 +18,13 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it('mostra o nome Koinonia para quem entrou', () => {
+    sessionStorage.setItem('koinonia.papel', 'Gestao');
+    sessionStorage.setItem('koinonia.funcionarioId', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, koinonia-web');
+    expect(compiled.textContent).toContain('Koinonia');
+    expect(compiled.textContent).not.toContain('Hello');
   });
 });

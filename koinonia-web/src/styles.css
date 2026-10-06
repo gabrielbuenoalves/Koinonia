@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@source "../projects/ui/src";
+@source "../projects/planejamento/src";
+@source "../projects/ponto/src";
+
+@theme {
+  --font-sans: "Segoe UI", sans-serif;
+  --color-fundo: #0c0b10;
+  --color-superficie: #17151f;
+  --color-texto: #f4f1ea;
+  --color-secundario: #a39bb0;
+  --color-acento: #7c5cbf;
+}
+
+body {
+  margin: 0;
+  background: var(--color-fundo);
+  color: var(--color-texto);
+  font-family: var(--font-sans);
+}

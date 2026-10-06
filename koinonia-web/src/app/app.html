@@ -1,23 +1,34 @@
-<h1>Hello, {{ title() }}</h1>
-
-<nav>
-  <label>
-    Papel
-    <select [value]="papel()" (change)="guardarPapel($event)">
-      <option value=""></option>
-      <option value="Gestao">Gestao</option>
-      <option value="Empregado">Empregado</option>
-    </select>
-  </label>
-  <label>
-    Funcionário da sessão
-    <input [value]="funcionarioId()" (input)="guardarFuncionario($event)" />
-  </label>
-  @if (gestao()) {
-    <a routerLink="/planejamento">Planejamento</a>
-    <a routerLink="/fechamento">Fechamento</a>
+<div
+  class="min-h-screen bg-fundo font-sans text-texto"
+  [class.grid]="naEntrada()"
+  [class.place-items-center]="naEntrada()"
+  [class.flex]="!naEntrada()"
+>
+  @if (!naEntrada()) {
+    <aside class="flex w-56 flex-col gap-2 bg-superficie p-4">
+      <p class="px-3 py-2 text-lg">Koinonia</p>
+      @for (item of itens(); track item.rota) {
+        <a
+          [routerLink]="item.rota"
+          routerLinkActive="bg-acento"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="rounded-md px-3 py-2"
+        >
+          {{ item.rotulo }}
+        </a>
+      }
+    </aside>
   }
-  <a routerLink="/ponto">Ponto</a>
-</nav>
-
-<router-outlet />
+  <div [class]="naEntrada() ? 'w-full max-w-md' : 'flex min-w-0 flex-1 flex-col'">
+    @if (!naEntrada()) {
+      <header class="flex items-center justify-end gap-4 px-6 py-4">
+        <p>{{ rotuloPapel() }}</p>
+        <p>{{ funcionarioId() }}</p>
+        <button type="button" class="rounded-md px-3 py-2 text-secundario" (click)="sair()">Sair</button>
+      </header>
+    }
+    <main [class]="naEntrada() ? '' : 'px-6 pb-8'">
+      <router-outlet />
+    </main>
+  </div>
+</div>

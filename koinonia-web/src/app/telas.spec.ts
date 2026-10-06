@@ -39,34 +39,48 @@ describe('shell', () => {
 
   afterEach(() => sessionStorage.clear());
 
-  it('guarda papel e funcionario nas chaves da sessao', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    preencher(fixture.nativeElement, 'Papel', 'Gestao');
-    preencher(fixture.nativeElement, 'Funcionário da sessão', gestaoId);
-
-    expect(sessionStorage.getItem('koinonia.papel')).toBe('Gestao');
-    expect(sessionStorage.getItem('koinonia.funcionarioId')).toBe(gestaoId);
-  });
-
-  it('empregado nao ve planejamento nem fechamento', () => {
+  it('empregado ve visao geral e ponto', () => {
     sessionStorage.setItem('koinonia.papel', 'Empregado');
+    sessionStorage.setItem('koinonia.funcionarioId', ana);
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const links = hrefs(fixture.nativeElement);
 
+    expect(fixture.nativeElement.textContent).toContain('Empregado');
+    expect(links).toContain('/');
     expect(links).toContain('/ponto');
     expect(links).not.toContain('/planejamento');
     expect(links).not.toContain('/fechamento');
   });
 
-  it('gestao ve planejamento, ponto e fechamento', () => {
+  it('gestao ve visao geral, ponto, planejamento e fechamento', () => {
     sessionStorage.setItem('koinonia.papel', 'Gestao');
+    sessionStorage.setItem('koinonia.funcionarioId', gestaoId);
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
-    const links = hrefs(fixture.nativeElement);
 
-    expect(links).toEqual(jasmine.arrayContaining(['/planejamento', '/ponto', '/fechamento']));
+    expect(hrefs(fixture.nativeElement)).toEqual(
+      jasmine.arrayContaining(['/', '/ponto', '/planejamento', '/fechamento']),
+    );
+    expect(fixture.nativeElement.textContent).toContain('Gestão');
+    expect(fixture.nativeElement.textContent).toContain(gestaoId);
+  });
+
+  it('sair limpa a sessao e volta para entrar', async () => {
+    sessionStorage.setItem('koinonia.papel', 'Gestao');
+    sessionStorage.setItem('koinonia.funcionarioId', gestaoId);
+    const fixture = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+    fixture.detectChanges();
+
+    clicar(fixture.nativeElement, 'Sair');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(sessionStorage.getItem('koinonia.papel')).toBeNull();
+    expect(sessionStorage.getItem('koinonia.funcionarioId')).toBeNull();
+    expect(router.url).toBe('/entrar');
+    expect(fixture.nativeElement.querySelector('aside')).toBeNull();
   });
 });
 
@@ -132,31 +146,6 @@ describe('guard de gestao', () => {
     expect(router.url).toBe('/entrar');
   });
 
-  it('trocar para empregado em planejamento ou fechamento vai para ponto', async () => {
-    sessionStorage.setItem('koinonia.papel', 'Gestao');
-    sessionStorage.setItem('koinonia.funcionarioId', gestaoId);
-    const router = TestBed.inject(Router);
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    await router.navigateByUrl('/planejamento');
-    fixture.detectChanges();
-    http.expectOne(`${apiUrl}/funcionarios`).flush('[]');
-    expect(router.url).toBe('/planejamento');
-
-    preencher(fixture.nativeElement, 'Papel', 'Empregado');
-    await fixture.whenStable();
-    expect(router.url).toBe('/ponto');
-
-    preencher(fixture.nativeElement, 'Papel', 'Gestao');
-    await router.navigateByUrl('/fechamento');
-    expect(router.url).toBe('/fechamento');
-
-    preencher(fixture.nativeElement, 'Papel', 'Empregado');
-    await fixture.whenStable();
-    expect(router.url).toBe('/ponto');
-  });
 });
 
 describe('campo e periodo', () => {

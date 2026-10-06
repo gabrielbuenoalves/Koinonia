@@ -1,30 +1,44 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { sairDaGestao } from './gestao.guard';
+import { Component, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { itensDoMenu } from './menu';
+import { limparSessao, rotuloDoPapel } from './sessao';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   private readonly router = inject(Router);
-  protected readonly title = signal('koinonia-web');
   protected readonly papel = signal(sessionStorage.getItem('koinonia.papel') ?? '');
   protected readonly funcionarioId = signal(sessionStorage.getItem('koinonia.funcionarioId') ?? '');
-  protected readonly gestao = computed(() => this.papel().toLowerCase() === 'gestao');
+  protected readonly naEntrada = signal(caminhoDe(this.router.url) === '/entrar');
 
-  guardarPapel(evento: Event) {
-    const valor = (evento.target as HTMLSelectElement).value;
-    sessionStorage.setItem('koinonia.papel', valor);
-    this.papel.set(valor);
-    sairDaGestao(this.router, valor);
+  constructor() {
+    this.router.events.subscribe((evento) => {
+      if (evento instanceof NavigationEnd) {
+        this.naEntrada.set(caminhoDe(evento.urlAfterRedirects) === '/entrar');
+      }
+    });
   }
 
-  guardarFuncionario(evento: Event) {
-    const valor = (evento.target as HTMLInputElement).value;
-    sessionStorage.setItem('koinonia.funcionarioId', valor);
-    this.funcionarioId.set(valor);
+  protected itens() {
+    return itensDoMenu(this.papel());
   }
+
+  protected rotuloPapel() {
+    return rotuloDoPapel(this.papel());
+  }
+
+  sair() {
+    limparSessao();
+    this.papel.set('');
+    this.funcionarioId.set('');
+    void this.router.navigateByUrl('/entrar');
+  }
+}
+
+function caminhoDe(url: string): string {
+  return url.split(/[?#]/)[0];
 }
