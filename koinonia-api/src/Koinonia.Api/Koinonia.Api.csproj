@@ -2,6 +2,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Koinonia.Shared\Koinonia.Shared.csproj" />
+    <ProjectReference Include="..\Koinonia.Planejamento.Application\Koinonia.Planejamento.Application.csproj" />
+    <ProjectReference Include="..\Koinonia.Planejamento.Infrastructure\Koinonia.Planejamento.Infrastructure.csproj" />
+    <ProjectReference Include="..\Koinonia.Ponto.Application\Koinonia.Ponto.Application.csproj" />
+    <ProjectReference Include="..\Koinonia.Ponto.Infrastructure\Koinonia.Ponto.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
