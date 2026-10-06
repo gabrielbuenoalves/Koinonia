@@ -37,6 +37,7 @@ interface EspelhoResposta {
 
     <form aria-label="Batida" (submit)="$event.preventDefault()">
       <ui-periodo
+        tipo="datetime-local"
         [inicio]="entrada"
         [fim]="saida"
         (inicioChange)="entrada = $event"
@@ -119,12 +120,12 @@ export class PontoComponent {
   private registrar() {
     this.erro = '';
     this.http
-      .post(`${apiUrl}/batidas/entrada`, { entrada: this.entrada }, { responseType: 'text' })
+      .post(`${apiUrl}/batidas/entrada`, { entrada: comFusoDeSaoPaulo(this.entrada) }, { responseType: 'text' })
       .subscribe({
         next: (texto) => {
           const corpo = JSON.parse(texto) as { id: string };
           this.http
-            .post(`${apiUrl}/batidas/${corpo.id}/saida`, { saida: this.saida }, { responseType: 'text' })
+            .post(`${apiUrl}/batidas/${corpo.id}/saida`, { saida: comFusoDeSaoPaulo(this.saida) }, { responseType: 'text' })
             .subscribe({
               next: () => this.carregar(),
               error: (erro: HttpErrorResponse) => this.mostrar(erro),
@@ -158,6 +159,10 @@ export class PontoComponent {
   private mostrar(erro: HttpErrorResponse) {
     this.erro = typeof erro.error === 'string' && erro.error.trim() ? erro.error : 'A operação foi recusada.';
   }
+}
+
+function comFusoDeSaoPaulo(valor: string): string {
+  return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(valor) ? `${valor}:00-03:00` : valor;
 }
 
 @Component({

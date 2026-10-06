@@ -114,6 +114,32 @@ describe('guard de gestao', () => {
     await harness.navigateByUrl('/fechamento');
     expect(TestBed.inject(Router).url).toBe('/fechamento');
   });
+
+  it('trocar para empregado em planejamento ou fechamento vai para ponto', async () => {
+    sessionStorage.setItem('koinonia.papel', 'Gestao');
+    sessionStorage.setItem('koinonia.funcionarioId', gestaoId);
+    const router = TestBed.inject(Router);
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    await router.navigateByUrl('/planejamento');
+    fixture.detectChanges();
+    http.expectOne(`${apiUrl}/funcionarios`).flush('[]');
+    expect(router.url).toBe('/planejamento');
+
+    preencher(fixture.nativeElement, 'Papel', 'Empregado');
+    await fixture.whenStable();
+    expect(router.url).toBe('/ponto');
+
+    preencher(fixture.nativeElement, 'Papel', 'Gestao');
+    await router.navigateByUrl('/fechamento');
+    expect(router.url).toBe('/fechamento');
+
+    preencher(fixture.nativeElement, 'Papel', 'Empregado');
+    await fixture.whenStable();
+    expect(router.url).toBe('/ponto');
+  });
 });
 
 describe('campo e periodo', () => {
@@ -225,8 +251,8 @@ describe('planejamento', () => {
     const fixture = montarPlanejamento(http, [{ id: ana, nome: 'Ana' }]);
     const form = formulario(fixture, 'Publicar evento');
     preencher(form, 'Nome', 'Formatura');
-    preencher(form, 'Início', '2026-10-06T14:00:00-03:00');
-    preencher(form, 'Fim', '2026-10-06T18:00:00-03:00');
+    preencher(form, 'Início', '2026-10-06T14:00');
+    preencher(form, 'Fim', '2026-10-06T18:00');
     preencher(form, 'Forma', 'banco de horas');
     preencher(form, 'Fator', '1');
     const caixa = form.querySelector('input[type="checkbox"]') as HTMLInputElement;
@@ -316,8 +342,8 @@ describe('ponto e fechamento', () => {
     expect(fixture.nativeElement.querySelectorAll('button').length).toBeGreaterThan(0);
 
     const batida = formulario(fixture, 'Batida');
-    preencher(batida, 'Início', '2026-10-06T08:00:00-03:00');
-    preencher(batida, 'Fim', '2026-10-06T19:00:00-03:00');
+    preencher(batida, 'Início', '2026-10-06T08:00');
+    preencher(batida, 'Fim', '2026-10-06T19:00');
     clicar(fixture.nativeElement, 'registrar');
 
     const entrada = http.expectOne(`${apiUrl}/batidas/entrada`);

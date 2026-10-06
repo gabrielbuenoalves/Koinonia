@@ -50,6 +50,7 @@ interface Funcionario {
     <form aria-label="Publicar evento" (submit)="publicarEvento($event)">
       <ui-campo rotulo="Nome" [valor]="nomeEvento" (valorChange)="nomeEvento = $event" />
       <ui-periodo
+        tipo="datetime-local"
         [inicio]="inicioEvento"
         [fim]="fimEvento"
         (inicioChange)="inicioEvento = $event"
@@ -156,8 +157,8 @@ export class PlanejamentoComponent implements OnInit {
         `${apiUrl}/eventos`,
         {
           nome: this.nomeEvento,
-          inicio: this.inicioEvento,
-          fim: this.fimEvento,
+          inicio: comFusoDeSaoPaulo(this.inicioEvento),
+          fim: comFusoDeSaoPaulo(this.fimEvento),
           funcionarioIds: this.funcionariosDoEvento,
           forma: this.forma,
           percentual: decimalOuNulo(this.percentual),
@@ -221,6 +222,10 @@ export class PlanejamentoComponent implements OnInit {
   private mostrar(erro: HttpErrorResponse) {
     this.erro = typeof erro.error === 'string' && erro.error.trim() ? erro.error : 'A operação foi recusada.';
   }
+}
+
+function comFusoDeSaoPaulo(valor: string): string {
+  return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(valor) ? `${valor}:00-03:00` : valor;
 }
 
 function decimalOuNulo(valor: string): number | null {
