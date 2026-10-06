@@ -1,5 +1,6 @@
 using Koinonia.Api;
 using Koinonia.Api.Cadastro;
+using Koinonia.Api.Dados;
 using Koinonia.Planejamento.Application;
 using Koinonia.Planejamento.Domain;
 using Koinonia.Planejamento.Infrastructure;
@@ -13,6 +14,7 @@ var conexao = builder.Configuration.GetConnectionString("Koinonia") ?? "Data Sou
 builder.Services.AddDbContext<CadastroDbContext>(opcoes => opcoes.UseSqlite(conexao));
 builder.Services.AddDbContext<PlanejamentoDbContext>(opcoes => opcoes.UseSqlite(conexao));
 builder.Services.AddDbContext<PontoDbContext>(opcoes => opcoes.UseSqlite(conexao));
+builder.Services.AddDbContext<KoinoniaDbContext>(opcoes => opcoes.UseSqlite(conexao));
 builder.Services.AddScoped<RepositorioDePlanejamento>();
 builder.Services.AddScoped<IRepositorioDePlanejamento>(provedor => provedor.GetRequiredService<RepositorioDePlanejamento>());
 builder.Services.AddScoped<ServicoDePlanejamento>();
@@ -32,6 +34,7 @@ using (var escopo = app.Services.CreateScope())
     escopo.ServiceProvider.GetRequiredService<CadastroDbContext>().Database.Migrate();
     escopo.ServiceProvider.GetRequiredService<PlanejamentoDbContext>().Database.Migrate();
     escopo.ServiceProvider.GetRequiredService<PontoDbContext>().Database.Migrate();
+    escopo.ServiceProvider.GetRequiredService<KoinoniaDbContext>().Database.Migrate();
 }
 
 app.UseCors();
