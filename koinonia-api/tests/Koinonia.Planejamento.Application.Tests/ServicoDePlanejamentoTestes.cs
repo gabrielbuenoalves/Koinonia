@@ -75,6 +75,23 @@ public class ServicoDePlanejamentoTestes : IDisposable
         Assert.Equal(50m, leitura.PercentualExtraComum);
     }
 
+    [Fact]
+    public void Alterar_evento_mantendo_o_mesmo_escalado_persiste_o_novo_nome()
+    {
+        var pessoa = FuncionarioId.Novo();
+        var inicio = new DateTimeOffset(2026, 10, 6, 14, 0, 0, TimeSpan.FromHours(-3));
+        var fim = new DateTimeOffset(2026, 10, 6, 18, 0, 0, TimeSpan.FromHours(-3));
+        var tratamento = TratamentoDeEvento.Banco(1m);
+        var id = _servico.PublicarEvento("Formatura", inicio, fim, [pessoa], tratamento);
+
+        _servico.AlterarEvento(id, "Colação", inicio, fim, [pessoa], tratamento);
+
+        var leitura = _servico.Ler(pessoa, new DateOnly(2026, 10, 6));
+        var evento = Assert.Single(leitura.Eventos);
+        Assert.Equal("Colação", evento.Nome);
+        Assert.Equal(id, evento.Id);
+    }
+
     public void Dispose()
     {
         _contexto.Dispose();

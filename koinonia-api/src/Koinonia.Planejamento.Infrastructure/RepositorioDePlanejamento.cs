@@ -1,6 +1,7 @@
 using Koinonia.Planejamento.Application;
 using Koinonia.Planejamento.Domain;
 using Koinonia.Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace Koinonia.Planejamento.Infrastructure;
 
@@ -53,7 +54,11 @@ public sealed class RepositorioDePlanejamento : IRepositorioDePlanejamento
         row.Forma = (int)evento.Tratamento.Forma;
         row.Percentual = evento.Tratamento.Percentual;
         row.Fator = evento.Tratamento.Fator;
-        _contexto.Escalados.RemoveRange(_contexto.Escalados.Where(item => item.EventoId == evento.Id));
+        _contexto.Escalados.Where(item => item.EventoId == evento.Id).ExecuteDelete();
+        foreach (var entry in _contexto.ChangeTracker.Entries<EventoEscaladoRow>()
+                     .Where(item => item.Entity.EventoId == evento.Id)
+                     .ToList())
+            entry.State = EntityState.Detached;
         _contexto.Escalados.AddRange(evento.Escalados.Select(item => new EventoEscaladoRow
         {
             EventoId = evento.Id,
