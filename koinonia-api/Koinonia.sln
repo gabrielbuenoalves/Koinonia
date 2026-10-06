@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Koinonia.Ponto.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Koinonia.Ponto.Infrastructure.Tests", "tests\Koinonia.Ponto.Infrastructure.Tests\Koinonia.Ponto.Infrastructure.Tests.csproj", "{BEBF689B-853B-4D99-A595-11E16DDE46BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Koinonia.Architecture.Tests", "tests\Koinonia.Architecture.Tests\Koinonia.Architecture.Tests.csproj", "{CCE8718E-CEDC-42BC-BA7B-325685320007}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -227,6 +229,18 @@ Global
 		{BEBF689B-853B-4D99-A595-11E16DDE46BD}.Release|x64.Build.0 = Release|Any CPU
 		{BEBF689B-853B-4D99-A595-11E16DDE46BD}.Release|x86.ActiveCfg = Release|Any CPU
 		{BEBF689B-853B-4D99-A595-11E16DDE46BD}.Release|x86.Build.0 = Release|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Debug|x64.Build.0 = Debug|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Debug|x86.Build.0 = Debug|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Release|x64.ActiveCfg = Release|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Release|x64.Build.0 = Release|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Release|x86.ActiveCfg = Release|Any CPU
+		{CCE8718E-CEDC-42BC-BA7B-325685320007}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -247,5 +261,6 @@ Global
 		{5268BCFF-97E2-4DDC-8348-92517D98D8E3} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{C05F620E-6EFE-4B92-9BD0-3293318F9846} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{BEBF689B-853B-4D99-A595-11E16DDE46BD} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{CCE8718E-CEDC-42BC-BA7B-325685320007} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal
