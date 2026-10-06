@@ -3,3 +3,4 @@
  */
 
 export * from './lib/planejamento';
+export * from './lib/planejamento.component';

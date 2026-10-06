@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { acoesDoEspelho, EstadoEspelho, Papel } from './espelho-acoes';
 
 @Component({
@@ -7,7 +7,7 @@ import { acoesDoEspelho, EstadoEspelho, Papel } from './espelho-acoes';
   template: `
     <p>{{ estado === 'aprovado' ? 'Cópia aprovada' : 'Prévia' }}</p>
     @for (acao of acoes; track acao) {
-      <button type="button">{{ acao }}</button>
+      <button type="button" (click)="acaoEscolhida.emit(acao)">{{ acao }}</button>
     }
   `
 })
@@ -15,5 +15,6 @@ export class EspelhoComponent {
   @Input() estado: EstadoEspelho = 'previa';
   @Input() papel: Papel = 'empregado';
   @Input() trechos: unknown[] = [];
+  @Output() acaoEscolhida = new EventEmitter<string>();
   get acoes() { return acoesDoEspelho(this.estado, this.papel); }
 }

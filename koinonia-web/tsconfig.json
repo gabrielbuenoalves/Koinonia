@@ -16,13 +16,13 @@
     "module": "preserve",
     "paths": {
       "planejamento": [
-        "./dist/planejamento"
+        "./projects/planejamento/src/public-api.ts"
       ],
       "ponto": [
         "./projects/ponto/src/public-api.ts"
       ],
       "ui": [
-        "./dist/ui"
+        "./projects/ui/src/public-api.ts"
       ]
     }
   },
