@@ -86,6 +86,19 @@ public class EventoTestes
     }
 
     [Fact]
+    public void Alterar_passando_os_escalados_do_proprio_evento_mantem_a_escala()
+    {
+        var pessoa = FuncionarioId.Novo();
+        var evento = Evento.Criar("Original", Inicio, Fim, [pessoa], TratamentoDeEvento.HoraNormal());
+
+        evento.Alterar("Novo", Inicio, Fim, evento.Escalados, TratamentoDeEvento.Adicional(10m));
+
+        Assert.Equal("Novo", evento.Nome);
+        Assert.Single(evento.Escalados);
+        Assert.Contains(pessoa, evento.Escalados);
+    }
+
+    [Fact]
     public void Alterar_com_escalados_vazios_e_recusado_sem_alterar_estado()
     {
         var pessoa = FuncionarioId.Novo();

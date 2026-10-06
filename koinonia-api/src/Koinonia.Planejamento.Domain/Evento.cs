@@ -57,7 +57,7 @@ public sealed class Evento
     {
         var nomeValidado = ValidarNome(nome);
         var fimValidado = ValidarFim(inicio, fim);
-        var escaladosValidados = ValidarEscalados(escalados);
+        var escaladosValidados = ValidarEscalados(escalados).ToList();
 
         Nome = nomeValidado;
         Inicio = inicio;
