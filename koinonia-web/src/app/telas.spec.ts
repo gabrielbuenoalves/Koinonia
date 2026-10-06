@@ -559,6 +559,22 @@ describe('entrada e visao geral', () => {
     }
   });
 
+  it('depois da entrada o menu mostra gestao e o identificador', async () => {
+    const fixture = await abrirEntrada();
+    const form = formulario(fixture, 'Entrar');
+    preencher(form, 'Papel', 'Gestao');
+    preencher(form, 'Identificador', ana);
+    clicar(form, 'Entrar');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const links = hrefs(fixture.nativeElement);
+    expect(links).toContain('/planejamento');
+    expect(links).toContain('/fechamento');
+    expect(fixture.nativeElement.textContent).toContain('Gestão');
+    expect(fixture.nativeElement.textContent).toContain(ana);
+  });
+
   it('o cartao da gestao abre ponto, planejamento e fechamento', async () => {
     sessionStorage.setItem('koinonia.papel', 'Gestao');
     sessionStorage.setItem('koinonia.funcionarioId', gestaoId);

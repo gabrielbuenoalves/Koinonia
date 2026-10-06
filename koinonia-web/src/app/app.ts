@@ -19,6 +19,8 @@ export class App {
     this.router.events.subscribe((evento) => {
       if (evento instanceof NavigationEnd) {
         this.naEntrada.set(caminhoDe(evento.urlAfterRedirects) === '/entrar');
+        this.papel.set(sessionStorage.getItem('koinonia.papel') ?? '');
+        this.funcionarioId.set(sessionStorage.getItem('koinonia.funcionarioId') ?? '');
       }
     });
   }
