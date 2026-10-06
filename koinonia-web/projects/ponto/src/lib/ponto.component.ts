@@ -181,7 +181,7 @@ function comFusoDeSaoPaulo(valor: string): string {
   imports: [PeriodoComponent],
   template: `
     <h1 class="mb-4 text-xl">Fechamento</h1>
-    <section class="rounded-xl bg-superficie p-6">
+    <section class="flex flex-col gap-4 rounded-xl bg-superficie p-6">
       @if (erro) {
         <p class="text-secundario">{{ erro }}</p>
       }

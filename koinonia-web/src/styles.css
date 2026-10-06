@@ -16,5 +16,6 @@ body {
   margin: 0;
   background: var(--color-fundo);
   color: var(--color-texto);
+  color-scheme: dark;
   font-family: var(--font-sans);
 }

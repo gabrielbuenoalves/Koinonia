@@ -12,4 +12,5 @@ export const routes: Routes = [
   { path: 'planejamento', component: PlanejamentoComponent, canActivate: [sessaoGuard, gestaoGuard] },
   { path: 'ponto', component: PontoComponent, canActivate: [sessaoGuard] },
   { path: 'fechamento', component: FechamentoComponent, canActivate: [sessaoGuard, gestaoGuard] },
+  { path: '**', redirectTo: '' },
 ];

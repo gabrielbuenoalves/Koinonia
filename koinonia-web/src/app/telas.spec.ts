@@ -146,6 +146,13 @@ describe('guard de gestao', () => {
     expect(router.url).toBe('/entrar');
   });
 
+  it('sem sessao uma rota desconhecida volta para entrar', async () => {
+    const router = TestBed.inject(Router);
+
+    await router.navigateByUrl('/nao-existe');
+    expect(router.url).toBe('/entrar');
+  });
+
 });
 
 describe('campo e periodo', () => {
