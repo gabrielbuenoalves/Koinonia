@@ -7,14 +7,16 @@ import { atalhosDoModulo } from './menu';
   standalone: true,
   imports: [RouterLink],
   template: `
-    <h1>O ponto está em uso.</h1>
-    <p>A gestão organiza a jornada. O empregado registra a sua.</p>
-    <article>
-      <h2>Ponto</h2>
-      <p>Entrada, saída, escala e fechamento da jornada.</p>
-      @for (atalho of atalhos; track atalho.rota) {
-        <a [routerLink]="atalho.rota">{{ atalho.rotulo }}</a>
-      }
+    <h1 class="text-4xl">O ponto está em uso.</h1>
+    <p class="mt-2 text-secundario">A gestão organiza a jornada. O empregado registra a sua.</p>
+    <article class="mt-8 rounded-xl bg-superficie p-6">
+      <h2 class="text-xl">Ponto</h2>
+      <p class="mt-2 text-secundario">Entrada, saída, escala e fechamento da jornada.</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        @for (atalho of atalhos; track atalho.rota) {
+          <a class="rounded-md bg-acento px-4 py-2 text-texto" [routerLink]="atalho.rota">{{ atalho.rotulo }}</a>
+        }
+      </div>
     </article>
   `,
 })

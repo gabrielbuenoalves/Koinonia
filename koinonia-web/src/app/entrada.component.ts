@@ -1,28 +1,29 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { identificadorValido } from './sessao';
+import { sessaoValida } from './sessao';
 
 @Component({
   selector: 'app-entrada',
   standalone: true,
   template: `
-    <form aria-label="Entrar" (submit)="confirmar($event)">
-      <label>
+    <form class="flex flex-col gap-4 rounded-xl bg-superficie p-6" aria-label="Entrar" (submit)="confirmar($event)">
+      <h1 class="text-xl">Koinonia</h1>
+      <label class="flex flex-col gap-1 text-secundario">
         Papel
-        <select [value]="papel" (change)="definirPapel($event)">
+        <select class="rounded-md bg-fundo px-3 py-2 text-texto" [value]="papel" (change)="definirPapel($event)">
           <option value=""></option>
           <option value="Gestao">Gestão</option>
           <option value="Empregado">Empregado</option>
         </select>
       </label>
-      <label>
+      <label class="flex flex-col gap-1 text-secundario">
         Identificador
-        <input [value]="identificador" (input)="definirIdentificador($event)" />
+        <input class="rounded-md bg-fundo px-3 py-2 text-texto" [value]="identificador" (input)="definirIdentificador($event)" />
       </label>
       @if (erro) {
-        <p>{{ erro }}</p>
+        <p class="text-secundario">{{ erro }}</p>
       }
-      <button type="submit">Entrar</button>
+      <button type="submit" class="rounded-md bg-acento px-4 py-2 text-texto">Entrar</button>
     </form>
   `,
 })
@@ -43,11 +44,13 @@ export class EntradaComponent {
   confirmar(evento: Event) {
     evento.preventDefault();
     const identificador = this.identificador.trim();
-    if (!this.papel || !identificadorValido(identificador)) {
+    const papel = this.papel.trim();
+    const papelExato = papel === 'Gestao' || papel === 'Empregado';
+    if (!sessaoValida(papel, identificador) || !papelExato) {
       this.erro = 'Informe o papel e um identificador válido.';
       return;
     }
-    sessionStorage.setItem('koinonia.papel', this.papel);
+    sessionStorage.setItem('koinonia.papel', papel);
     sessionStorage.setItem('koinonia.funcionarioId', identificador);
     void this.router.navigateByUrl('/');
   }

@@ -531,6 +531,20 @@ describe('entrada e visao geral', () => {
     expect(TestBed.inject(Router).url).toBe('/entrar');
   });
 
+  it('papel desconhecido nao grava sessao nem navega', async () => {
+    const fixture = await abrirEntrada();
+    const form = formulario(fixture, 'Entrar');
+    form.querySelector('select')?.append(new Option('Administrador', 'Administrador'));
+    preencher(form, 'Papel', 'Administrador');
+    preencher(form, 'Identificador', ana);
+    clicar(form, 'Entrar');
+    await fixture.whenStable();
+
+    expect(sessionStorage.getItem('koinonia.papel')).toBeNull();
+    expect(sessionStorage.getItem('koinonia.funcionarioId')).toBeNull();
+    expect(TestBed.inject(Router).url).toBe('/entrar');
+  });
+
   it('sessao valida de cada papel abre a visao geral', async () => {
     for (const papel of ['Gestao', 'Empregado']) {
       sessionStorage.clear();
