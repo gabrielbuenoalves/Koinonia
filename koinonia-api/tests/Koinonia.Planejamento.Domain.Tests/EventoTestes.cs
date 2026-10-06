@@ -67,4 +67,38 @@ public class EventoTestes
 
         Assert.Equal("Dois eventos com interseção de duração maior que zero, para a mesma pessoa, são recusados.", erro.Message);
     }
+
+    [Fact]
+    public void Alterar_com_fim_anterior_ao_inicio_e_recusado_sem_alterar_estado()
+    {
+        var pessoa = FuncionarioId.Novo();
+        var evento = Evento.Criar("Original", Inicio, Fim, [pessoa], TratamentoDeEvento.HoraNormal());
+
+        var erro = Assert.Throws<ViolacaoDeRegra>(() =>
+            evento.Alterar("Novo", Fim, Inicio, [pessoa], TratamentoDeEvento.Adicional(10m)));
+
+        Assert.Equal("Saída anterior à entrada.", erro.Message);
+        Assert.Equal("Original", evento.Nome);
+        Assert.Equal(Inicio, evento.Inicio);
+        Assert.Equal(Fim, evento.Fim);
+        Assert.Single(evento.Escalados);
+        Assert.Contains(pessoa, evento.Escalados);
+    }
+
+    [Fact]
+    public void Alterar_com_escalados_vazios_e_recusado_sem_alterar_estado()
+    {
+        var pessoa = FuncionarioId.Novo();
+        var evento = Evento.Criar("Original", Inicio, Fim, [pessoa], TratamentoDeEvento.HoraNormal());
+
+        var erro = Assert.Throws<ViolacaoDeRegra>(() =>
+            evento.Alterar("Novo", Inicio, Fim, [], TratamentoDeEvento.HoraNormal()));
+
+        Assert.Equal("Intervalo inválido.", erro.Message);
+        Assert.Equal("Original", evento.Nome);
+        Assert.Equal(Inicio, evento.Inicio);
+        Assert.Equal(Fim, evento.Fim);
+        Assert.Single(evento.Escalados);
+        Assert.Contains(pessoa, evento.Escalados);
+    }
 }

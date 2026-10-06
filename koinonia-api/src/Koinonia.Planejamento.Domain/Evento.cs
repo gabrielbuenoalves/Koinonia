@@ -55,12 +55,16 @@ public sealed class Evento
 
     public void Alterar(string nome, DateTimeOffset inicio, DateTimeOffset fim, IReadOnlyCollection<FuncionarioId> escalados, TratamentoDeEvento tratamento)
     {
-        Nome = ValidarNome(nome);
+        var nomeValidado = ValidarNome(nome);
+        var fimValidado = ValidarFim(inicio, fim);
+        var escaladosValidados = ValidarEscalados(escalados);
+
+        Nome = nomeValidado;
         Inicio = inicio;
-        Fim = ValidarFim(inicio, fim);
+        Fim = fimValidado;
         Tratamento = tratamento;
         _escalados.Clear();
-        foreach (var escalado in ValidarEscalados(escalados))
+        foreach (var escalado in escaladosValidados)
             _escalados.Add(escalado);
     }
 
