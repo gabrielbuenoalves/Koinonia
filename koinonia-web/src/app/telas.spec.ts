@@ -489,6 +489,19 @@ describe('ponto e fechamento', () => {
     expect(pedido.request.headers.get('X-Papel')).toBe('Gestao');
     pedido.flush(new Blob(['arquivo']));
   });
+
+  it('ponto e fechamento usam titulo menor e o cartao', () => {
+    const ponto = TestBed.createComponent(PontoComponent);
+    ponto.detectChanges();
+    expect(ponto.nativeElement.querySelector('h1')?.textContent).toContain('Ponto');
+    expect(ponto.nativeElement.querySelector('h1')?.className).toContain('text-xl');
+    expect(ponto.nativeElement.querySelector('section')?.className).toContain('bg-superficie');
+
+    const fechamento = TestBed.createComponent(FechamentoComponent);
+    fechamento.detectChanges();
+    expect(fechamento.nativeElement.querySelector('h1')?.textContent).toContain('Fechamento');
+    expect(fechamento.nativeElement.querySelector('section')?.className).toContain('bg-superficie');
+  });
 });
 
 describe('entrada e visao geral', () => {

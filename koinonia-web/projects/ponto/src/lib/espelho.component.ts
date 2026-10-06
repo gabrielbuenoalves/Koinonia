@@ -5,9 +5,9 @@ import { acoesDoEspelho, EstadoEspelho, Papel } from './espelho-acoes';
   selector: 'ponto-espelho',
   standalone: true,
   template: `
-    <p>{{ estado === 'aprovado' ? 'Cópia aprovada' : 'Prévia' }}</p>
+    <p class="text-texto">{{ estado === 'aprovado' ? 'Cópia aprovada' : 'Prévia' }}</p>
     @for (acao of acoes; track acao) {
-      <button type="button" (click)="acaoEscolhida.emit(acao)">{{ acao }}</button>
+      <button type="button" class="rounded-md bg-acento px-4 py-2 text-texto" (click)="acaoEscolhida.emit(acao)">{{ acao }}</button>
     }
   `
 })

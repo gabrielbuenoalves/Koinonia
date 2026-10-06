@@ -26,47 +26,50 @@ interface EspelhoResposta {
   standalone: true,
   imports: [CampoComponent, PeriodoComponent, EstadoVazioComponent, EspelhoComponent],
   template: `
-    @if (erro) {
-      <p>{{ erro }}</p>
-    }
-
-    <ui-campo rotulo="Funcionário" [valor]="funcionarioId" (valorChange)="funcionarioId = $event" />
-    <ui-campo rotulo="Dia" tipo="date" [valor]="dia" (valorChange)="dia = $event" />
-    <button type="button" (click)="carregar()">Carregar</button>
-
-    <form aria-label="Batida" (submit)="$event.preventDefault()">
-      <ui-periodo
-        tipo="datetime-local"
-        [inicio]="entrada"
-        [fim]="saida"
-        (inicioChange)="entrada = $event"
-        (fimChange)="saida = $event"
-      />
-    </form>
-
-    @if (carregado) {
-      <ponto-espelho
-        [estado]="estado"
-        [papel]="papel"
-        [trechos]="trechos"
-        (acaoEscolhida)="executar($event)"
-      />
-      @if (trechos.length === 0) {
-        <ui-estado-vazio mensagem="Nenhum trecho neste dia." />
+    <h1 class="mb-4 text-xl">Ponto</h1>
+    <section class="flex flex-col gap-4 rounded-xl bg-superficie p-6">
+      @if (erro) {
+        <p class="text-secundario">{{ erro }}</p>
       }
-      @for (trecho of trechos; track $index) {
-        <p>
-          {{ trecho.inicio }}
-          {{ trecho.fim }}
-          {{ trecho.fatia }}
-          {{ trecho.evento }}
-          {{ trecho.percentual }}
-          {{ trecho.fator }}
-          {{ trecho.minutosTrabalhados }}
-          {{ trecho.minutosCreditados }}
-        </p>
+
+      <ui-campo rotulo="Funcionário" [valor]="funcionarioId" (valorChange)="funcionarioId = $event" />
+      <ui-campo rotulo="Dia" tipo="date" [valor]="dia" (valorChange)="dia = $event" />
+      <button type="button" class="rounded-md bg-acento px-4 py-2 text-texto" (click)="carregar()">Carregar</button>
+
+      <form class="flex flex-col gap-4" aria-label="Batida" (submit)="$event.preventDefault()">
+        <ui-periodo
+          tipo="datetime-local"
+          [inicio]="entrada"
+          [fim]="saida"
+          (inicioChange)="entrada = $event"
+          (fimChange)="saida = $event"
+        />
+      </form>
+
+      @if (carregado) {
+        <ponto-espelho
+          [estado]="estado"
+          [papel]="papel"
+          [trechos]="trechos"
+          (acaoEscolhida)="executar($event)"
+        />
+        @if (trechos.length === 0) {
+          <ui-estado-vazio mensagem="Nenhum trecho neste dia." />
+        }
+        @for (trecho of trechos; track $index) {
+          <p class="text-texto">
+            {{ trecho.inicio }}
+            {{ trecho.fim }}
+            {{ trecho.fatia }}
+            {{ trecho.evento }}
+            {{ trecho.percentual }}
+            {{ trecho.fator }}
+            {{ trecho.minutosTrabalhados }}
+            {{ trecho.minutosCreditados }}
+          </p>
+        }
       }
-    }
+    </section>
   `,
 })
 export class PontoComponent {
@@ -177,27 +180,30 @@ function comFusoDeSaoPaulo(valor: string): string {
   standalone: true,
   imports: [PeriodoComponent],
   template: `
-    @if (erro) {
-      <p>{{ erro }}</p>
-    }
+    <h1 class="mb-4 text-xl">Fechamento</h1>
+    <section class="rounded-xl bg-superficie p-6">
+      @if (erro) {
+        <p class="text-secundario">{{ erro }}</p>
+      }
 
-    <form aria-label="Fechamento" (submit)="baixar($event)">
-      <ui-periodo
-        tipo="date"
-        [inicio]="inicio"
-        [fim]="fim"
-        (inicioChange)="inicio = $event"
-        (fimChange)="fim = $event"
-      />
-      <label>
-        Formato
-        <select (change)="definirFormato($event)">
-          <option value="csv">csv</option>
-          <option value="excel">excel</option>
-        </select>
-      </label>
-      <button type="submit">Baixar</button>
-    </form>
+      <form class="flex flex-col gap-4" aria-label="Fechamento" (submit)="baixar($event)">
+        <ui-periodo
+          tipo="date"
+          [inicio]="inicio"
+          [fim]="fim"
+          (inicioChange)="inicio = $event"
+          (fimChange)="fim = $event"
+        />
+        <label class="flex flex-col gap-1 text-secundario">
+          Formato
+          <select class="rounded-md bg-fundo px-3 py-2 text-texto" (change)="definirFormato($event)">
+            <option value="csv">csv</option>
+            <option value="excel">excel</option>
+          </select>
+        </label>
+        <button type="submit" class="rounded-md bg-acento px-4 py-2 text-texto">Baixar</button>
+      </form>
+    </section>
   `,
 })
 export class FechamentoComponent {
