@@ -5,7 +5,7 @@ import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { PlanejamentoComponent } from 'planejamento';
 import { FechamentoComponent, PontoComponent, papelDoEspelho } from 'ponto';
-import { API_URL, CampoComponent, PeriodoComponent } from 'ui';
+import { API_URL, CampoComponent, EstadoVazioComponent, PeriodoComponent } from 'ui';
 import { App } from './app';
 import { apiUrl } from './api-url';
 import { cabecalhosInterceptor } from './cabecalhos.interceptor';
@@ -176,6 +176,25 @@ describe('campo e periodo', () => {
     preencher(fixture.nativeElement, 'Fim', '1020');
     expect(inicio).toBe('480');
     expect(fim).toBe('1020');
+  });
+
+  it('campo e periodo usam a superficie do tema', () => {
+    const campo = TestBed.createComponent(CampoComponent);
+    campo.componentInstance.rotulo = 'Nome';
+    campo.detectChanges();
+    expect(campo.nativeElement.querySelector('input')?.className).toContain('bg-fundo');
+    expect(campo.nativeElement.querySelector('input')?.className).toContain('text-texto');
+
+    const periodo = TestBed.createComponent(PeriodoComponent);
+    periodo.detectChanges();
+    expect(periodo.nativeElement.querySelector('input')?.className).toContain('bg-fundo');
+  });
+
+  it('estado vazio usa o texto secundario', () => {
+    const fixture = TestBed.createComponent(EstadoVazioComponent);
+    fixture.componentInstance.mensagem = 'Nada';
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('p')?.className).toContain('text-secundario');
   });
 });
 

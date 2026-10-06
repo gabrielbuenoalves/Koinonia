@@ -4,9 +4,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'ui-campo',
   standalone: true,
   template: `
-    <label>
+    <label class="flex flex-col gap-1 text-secundario">
       {{ rotulo }}
-      <input [attr.type]="tipo" [value]="valor" (input)="aoDigitar($event)" />
+      <input class="rounded-md bg-fundo px-3 py-2 text-texto" [attr.type]="tipo" [value]="valor" (input)="aoDigitar($event)" />
     </label>
   `,
 })
