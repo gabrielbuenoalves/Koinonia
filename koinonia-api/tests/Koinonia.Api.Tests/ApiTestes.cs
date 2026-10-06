@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Koinonia.Ponto.Application;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +34,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
+        SqliteConnection.ClearAllPools();
         if (File.Exists(Arquivo))
             File.Delete(Arquivo);
     }
