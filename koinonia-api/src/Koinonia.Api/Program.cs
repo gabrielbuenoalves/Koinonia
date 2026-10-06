@@ -35,6 +35,7 @@ using (var escopo = app.Services.CreateScope())
     escopo.ServiceProvider.GetRequiredService<PlanejamentoDbContext>().Database.Migrate();
     escopo.ServiceProvider.GetRequiredService<PontoDbContext>().Database.Migrate();
     escopo.ServiceProvider.GetRequiredService<KoinoniaDbContext>().Database.Migrate();
+    SemeadorDeRoles.Semear(escopo.ServiceProvider.GetRequiredService<KoinoniaDbContext>());
 }
 
 app.UseCors();
