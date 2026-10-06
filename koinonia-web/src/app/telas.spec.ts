@@ -325,6 +325,13 @@ describe('planejamento', () => {
 
     expect(fixture.nativeElement.textContent).toContain('Funcionário desconhecido é recusado no host.');
   });
+
+  it('planejamento usa titulo menor e o cartao', () => {
+    const fixture = montarPlanejamento(http, []);
+    expect(fixture.nativeElement.querySelector('h1')?.textContent).toContain('Planejamento');
+    expect(fixture.nativeElement.querySelector('h1')?.className).toContain('text-xl');
+    expect(fixture.nativeElement.querySelector('section')?.className).toContain('bg-superficie');
+  });
 });
 
 describe('ponto e fechamento', () => {

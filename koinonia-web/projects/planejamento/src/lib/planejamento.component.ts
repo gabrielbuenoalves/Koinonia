@@ -12,77 +12,80 @@ interface Funcionario {
   standalone: true,
   imports: [CampoComponent, PeriodoComponent, EstadoVazioComponent],
   template: `
-    @if (erro) {
-      <p>{{ erro }}</p>
-    }
-
-    <form aria-label="Cadastrar funcionário" (submit)="cadastrar($event)">
-      <ui-campo rotulo="Nome" [valor]="nome" (valorChange)="nome = $event" />
-      <button type="submit">Cadastrar</button>
-    </form>
-
-    @if (funcionarios.length === 0) {
-      <ui-estado-vazio mensagem="Nenhum funcionário cadastrado." />
-    }
-
-    <form aria-label="Publicar escala" (submit)="publicarEscala($event)">
-      <label>
-        Funcionário
-        <select [value]="funcionarioEscala" (change)="definirFuncionario($event)">
-          @for (funcionario of funcionarios; track funcionario.id) {
-            <option [value]="funcionario.id">{{ funcionario.nome }}</option>
-          }
-        </select>
-      </label>
-      <ui-campo rotulo="Dia" tipo="date" [valor]="diaEscala" (valorChange)="diaEscala = $event" />
-      <ui-periodo
-        tipo="number"
-        [inicio]="inicioEscala"
-        [fim]="fimEscala"
-        (inicioChange)="inicioEscala = $event"
-        (fimChange)="fimEscala = $event"
-      />
-      <button type="submit">Publicar</button>
-      <button type="button" (click)="removerEscala()">Remover</button>
-    </form>
-
-    <form aria-label="Publicar evento" (submit)="publicarEvento($event)">
-      <ui-campo rotulo="Nome" [valor]="nomeEvento" (valorChange)="nomeEvento = $event" />
-      <ui-periodo
-        tipo="datetime-local"
-        [inicio]="inicioEvento"
-        [fim]="fimEvento"
-        (inicioChange)="inicioEvento = $event"
-        (fimChange)="fimEvento = $event"
-      />
-      <p>Funcionários</p>
-      @for (funcionario of funcionarios; track funcionario.id) {
-        <label>
-          <input type="checkbox" (change)="alternarFuncionario(funcionario.id, $event)" />
-          {{ funcionario.nome }}
-        </label>
+    <h1 class="mb-4 text-xl">Planejamento</h1>
+    <section class="flex flex-col gap-8 rounded-xl bg-superficie p-6">
+      @if (erro) {
+        <p class="text-secundario">{{ erro }}</p>
       }
-      <label>
-        Forma
-        <select (change)="definirForma($event)">
-          <option value="hora normal">hora normal</option>
-          <option value="adicional">adicional</option>
-          <option value="banco de horas">banco de horas</option>
-        </select>
-      </label>
-      <ui-campo rotulo="Percentual" [valor]="percentual" (valorChange)="percentual = $event" />
-      <ui-campo rotulo="Fator" [valor]="fator" (valorChange)="fator = $event" />
-      <button type="submit">Publicar</button>
-    </form>
 
-    <form aria-label="Percentual institucional" (submit)="definirPercentual($event)">
-      <ui-campo
-        rotulo="Percentual"
-        [valor]="percentualInstitucional"
-        (valorChange)="percentualInstitucional = $event"
-      />
-      <button type="submit">Publicar</button>
-    </form>
+      <form class="flex flex-col gap-4" aria-label="Cadastrar funcionário" (submit)="cadastrar($event)">
+        <ui-campo rotulo="Nome" [valor]="nome" (valorChange)="nome = $event" />
+        <button type="submit" class="rounded-md bg-acento px-4 py-2 text-texto">Cadastrar</button>
+      </form>
+
+      @if (funcionarios.length === 0) {
+        <ui-estado-vazio mensagem="Nenhum funcionário cadastrado." />
+      }
+
+      <form class="flex flex-col gap-4" aria-label="Publicar escala" (submit)="publicarEscala($event)">
+        <label class="flex flex-col gap-1 text-secundario">
+          Funcionário
+          <select class="rounded-md bg-fundo px-3 py-2 text-texto" [value]="funcionarioEscala" (change)="definirFuncionario($event)">
+            @for (funcionario of funcionarios; track funcionario.id) {
+              <option [value]="funcionario.id">{{ funcionario.nome }}</option>
+            }
+          </select>
+        </label>
+        <ui-campo rotulo="Dia" tipo="date" [valor]="diaEscala" (valorChange)="diaEscala = $event" />
+        <ui-periodo
+          tipo="number"
+          [inicio]="inicioEscala"
+          [fim]="fimEscala"
+          (inicioChange)="inicioEscala = $event"
+          (fimChange)="fimEscala = $event"
+        />
+        <button type="submit" class="rounded-md bg-acento px-4 py-2 text-texto">Publicar</button>
+        <button type="button" class="rounded-md bg-fundo px-4 py-2 text-secundario" (click)="removerEscala()">Remover</button>
+      </form>
+
+      <form class="flex flex-col gap-4" aria-label="Publicar evento" (submit)="publicarEvento($event)">
+        <ui-campo rotulo="Nome" [valor]="nomeEvento" (valorChange)="nomeEvento = $event" />
+        <ui-periodo
+          tipo="datetime-local"
+          [inicio]="inicioEvento"
+          [fim]="fimEvento"
+          (inicioChange)="inicioEvento = $event"
+          (fimChange)="fimEvento = $event"
+        />
+        <p class="text-secundario">Funcionários</p>
+        @for (funcionario of funcionarios; track funcionario.id) {
+          <label>
+            <input type="checkbox" (change)="alternarFuncionario(funcionario.id, $event)" />
+            {{ funcionario.nome }}
+          </label>
+        }
+        <label class="flex flex-col gap-1 text-secundario">
+          Forma
+          <select class="rounded-md bg-fundo px-3 py-2 text-texto" (change)="definirForma($event)">
+            <option value="hora normal">hora normal</option>
+            <option value="adicional">adicional</option>
+            <option value="banco de horas">banco de horas</option>
+          </select>
+        </label>
+        <ui-campo rotulo="Percentual" [valor]="percentual" (valorChange)="percentual = $event" />
+        <ui-campo rotulo="Fator" [valor]="fator" (valorChange)="fator = $event" />
+        <button type="submit" class="rounded-md bg-acento px-4 py-2 text-texto">Publicar</button>
+      </form>
+
+      <form class="flex flex-col gap-4" aria-label="Percentual institucional" (submit)="definirPercentual($event)">
+        <ui-campo
+          rotulo="Percentual"
+          [valor]="percentualInstitucional"
+          (valorChange)="percentualInstitucional = $event"
+        />
+        <button type="submit" class="rounded-md bg-acento px-4 py-2 text-texto">Publicar</button>
+      </form>
+    </section>
   `,
 })
 export class PlanejamentoComponent implements OnInit {
