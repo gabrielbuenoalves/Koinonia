@@ -116,6 +116,22 @@ describe('guard de gestao', () => {
     expect(TestBed.inject(Router).url).toBe('/fechamento');
   });
 
+  it('sem sessao uma rota interna volta para entrar', async () => {
+    const router = TestBed.inject(Router);
+
+    await router.navigateByUrl('/ponto');
+    expect(router.url).toBe('/entrar');
+
+    await router.navigateByUrl('/planejamento');
+    expect(router.url).toBe('/entrar');
+
+    await router.navigateByUrl('/fechamento');
+    expect(router.url).toBe('/entrar');
+
+    await router.navigateByUrl('/');
+    expect(router.url).toBe('/entrar');
+  });
+
   it('trocar para empregado em planejamento ou fechamento vai para ponto', async () => {
     sessionStorage.setItem('koinonia.papel', 'Gestao');
     sessionStorage.setItem('koinonia.funcionarioId', gestaoId);
@@ -466,6 +482,110 @@ describe('ponto e fechamento', () => {
     pedido.flush(new Blob(['arquivo']));
   });
 });
+
+describe('entrada e visao geral', () => {
+  let http: HttpTestingController;
+
+  beforeEach(() => {
+    sessionStorage.clear();
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter(routes),
+        provideHttpClient(withInterceptors([cabecalhosInterceptor])),
+        provideHttpClientTesting(),
+        { provide: API_URL, useValue: apiUrl },
+      ],
+    });
+    http = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    http.verify();
+    sessionStorage.clear();
+  });
+
+  it('identificador invalido nao grava sessao nem navega', async () => {
+    const fixture = await abrirEntrada();
+    const form = formulario(fixture, 'Entrar');
+    preencher(form, 'Papel', 'Gestao');
+    preencher(form, 'Identificador', 'abc');
+    clicar(form, 'Entrar');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(sessionStorage.getItem('koinonia.papel')).toBeNull();
+    expect(sessionStorage.getItem('koinonia.funcionarioId')).toBeNull();
+    expect(TestBed.inject(Router).url).toBe('/entrar');
+    expect(fixture.nativeElement.textContent).toContain('Informe o papel e um identificador válido.');
+  });
+
+  it('papel vazio nao grava sessao', async () => {
+    const fixture = await abrirEntrada();
+    const form = formulario(fixture, 'Entrar');
+    preencher(form, 'Identificador', ana);
+    clicar(form, 'Entrar');
+    await fixture.whenStable();
+
+    expect(sessionStorage.getItem('koinonia.papel')).toBeNull();
+    expect(sessionStorage.getItem('koinonia.funcionarioId')).toBeNull();
+    expect(TestBed.inject(Router).url).toBe('/entrar');
+  });
+
+  it('sessao valida de cada papel abre a visao geral', async () => {
+    for (const papel of ['Gestao', 'Empregado']) {
+      sessionStorage.clear();
+      const fixture = await abrirEntrada();
+      const form = formulario(fixture, 'Entrar');
+      preencher(form, 'Papel', papel);
+      preencher(form, 'Identificador', `  ${ana}  `);
+      clicar(form, 'Entrar');
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(sessionStorage.getItem('koinonia.papel')).toBe(papel);
+      expect(sessionStorage.getItem('koinonia.funcionarioId')).toBe(ana);
+      expect(TestBed.inject(Router).url).toBe('/');
+      expect(fixture.nativeElement.textContent).toContain('O ponto está em uso.');
+      expect(fixture.nativeElement.textContent).toContain(
+        'A gestão organiza a jornada. O empregado registra a sua.',
+      );
+      expect(fixture.nativeElement.textContent).toContain(
+        'Entrada, saída, escala e fechamento da jornada.',
+      );
+      fixture.destroy();
+    }
+  });
+
+  it('o cartao da gestao abre ponto, planejamento e fechamento', async () => {
+    sessionStorage.setItem('koinonia.papel', 'Gestao');
+    sessionStorage.setItem('koinonia.funcionarioId', gestaoId);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/');
+    expect(hrefs(harness.routeNativeElement as HTMLElement)).toEqual([
+      '/ponto',
+      '/planejamento',
+      '/fechamento',
+    ]);
+  });
+
+  it('o cartao do empregado abre so o ponto', async () => {
+    sessionStorage.setItem('koinonia.papel', 'Empregado');
+    sessionStorage.setItem('koinonia.funcionarioId', ana);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/');
+    expect(hrefs(harness.routeNativeElement as HTMLElement)).toEqual(['/ponto']);
+  });
+});
+
+async function abrirEntrada(): Promise<ComponentFixture<App>> {
+  const fixture = TestBed.createComponent(App);
+  fixture.detectChanges();
+  await TestBed.inject(Router).navigateByUrl('/entrar');
+  fixture.detectChanges();
+  await fixture.whenStable();
+  fixture.detectChanges();
+  return fixture;
+}
 
 function trecho() {
   return {
