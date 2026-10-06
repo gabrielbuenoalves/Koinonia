@@ -5,7 +5,7 @@ export interface ItemDeMenu {
 }
 
 export const menu: ItemDeMenu[] = [
-  { rotulo: 'VisÃ£o geral', rota: '/', papeis: ['Gestao', 'Empregado'] },
+  { rotulo: 'Visão geral', rota: '/', papeis: ['Gestao', 'Empregado'] },
   { rotulo: 'Ponto', rota: '/ponto', papeis: ['Gestao', 'Empregado'] },
   { rotulo: 'Planejamento', rota: '/planejamento', papeis: ['Gestao'] },
   { rotulo: 'Fechamento', rota: '/fechamento', papeis: ['Gestao'] },

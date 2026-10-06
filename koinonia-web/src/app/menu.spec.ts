@@ -9,7 +9,7 @@ describe('menu', () => {
       '/fechamento',
     ]);
     expect(itensDoMenu('Gestao').map((item) => item.rotulo)).toEqual([
-      'VisÃ£o geral',
+      'Visão geral',
       'Ponto',
       'Planejamento',
       'Fechamento',
