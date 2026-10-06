@@ -52,6 +52,8 @@ public readonly record struct IntervaloMinutos
 
 public sealed record EventoNoDia(Guid Id, string Nome, IntervaloMinutos Intervalo, TratamentoCopiado Tratamento);
 
+public sealed record PedacoDeBatida(DateOnly Dia, IntervaloMinutos Intervalo);
+
 public sealed record TrechoClassificado(
     IntervaloMinutos Intervalo,
     Fatia Fatia,
@@ -66,6 +68,37 @@ public sealed record TrechoClassificado(
 
 public static class ClassificarHoras
 {
+    public static readonly TimeZoneInfo Zona = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+
+    public static DateOnly DiaCivil(DateTimeOffset instante)
+        => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(instante, Zona).Date);
+
+    public static IReadOnlyList<PedacoDeBatida> Cortar(DateTimeOffset entrada, DateTimeOffset saida)
+    {
+        if (saida <= entrada)
+            throw new ViolacaoDeRegra("Saída anterior à entrada.");
+
+        var inicio = TimeZoneInfo.ConvertTime(TruncarMinuto(entrada), Zona);
+        var fim = TimeZoneInfo.ConvertTime(TruncarMinuto(saida), Zona);
+        if (fim <= inicio)
+            throw new ViolacaoDeRegra("Saída anterior à entrada.");
+
+        var pedacos = new List<PedacoDeBatida>();
+        var cursor = inicio;
+        while (cursor < fim)
+        {
+            var dia = DateOnly.FromDateTime(cursor.Date);
+            var meiaNoiteSeguinte = new DateTimeOffset(cursor.Date.AddDays(1), cursor.Offset);
+            var limite = meiaNoiteSeguinte < fim ? meiaNoiteSeguinte : fim;
+            var inicioMinuto = cursor.Hour * 60 + cursor.Minute;
+            var fimMinuto = limite == meiaNoiteSeguinte ? 1440 : limite.Hour * 60 + limite.Minute;
+            pedacos.Add(new PedacoDeBatida(dia, new IntervaloMinutos(inicioMinuto, fimMinuto)));
+            cursor = limite;
+        }
+
+        return pedacos;
+    }
+
     public static IReadOnlyList<TrechoClassificado> Executar(
         IReadOnlyList<IntervaloMinutos> batidas,
         IReadOnlyList<IntervaloMinutos> escala,
@@ -135,4 +168,7 @@ public static class ClassificarHoras
 
         return -1;
     }
+
+    private static DateTimeOffset TruncarMinuto(DateTimeOffset instante)
+        => new(instante.Year, instante.Month, instante.Day, instante.Hour, instante.Minute, 0, instante.Offset);
 }
