@@ -337,8 +337,13 @@ describe('planejamento', () => {
   it('planejamento usa titulo menor e o cartao', () => {
     const fixture = montarPlanejamento(http, []);
     expect(fixture.nativeElement.querySelector('h1')?.textContent).toContain('Planejamento');
-    expect(fixture.nativeElement.querySelector('h1')?.className).toContain('text-xl');
+    expect(fixture.nativeElement.querySelector('h1')?.className).toContain('font-serif');
     expect(fixture.nativeElement.querySelector('section')?.className).toContain('bg-superficie');
+    expect(fixture.nativeElement.querySelectorAll('section').length).toBe(4);
+    expect(fixture.nativeElement.textContent).toContain('Pessoas');
+    expect(fixture.nativeElement.textContent).toContain('Jornada');
+    expect(fixture.nativeElement.textContent).toContain('Exceção');
+    expect(fixture.nativeElement.textContent).toContain('Extra comum');
   });
 });
 
@@ -518,6 +523,8 @@ describe('ponto e fechamento', () => {
     fechamento.detectChanges();
     expect(fechamento.nativeElement.querySelector('h1')?.textContent).toContain('Fechamento');
     expect(fechamento.nativeElement.querySelector('section')?.className).toContain('bg-superficie');
+    expect(fechamento.nativeElement.querySelector('h1')?.className).toContain('font-serif');
+    expect(fechamento.nativeElement.querySelector('select')?.className).toContain('bg-campo');
   });
 });
 
