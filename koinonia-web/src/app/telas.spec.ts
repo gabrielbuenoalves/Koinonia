@@ -386,7 +386,7 @@ describe('ponto e fechamento', () => {
     const batida = formulario(fixture, 'Batida');
     preencher(batida, 'Início', '2026-10-06T08:00');
     preencher(batida, 'Fim', '2026-10-06T19:00');
-    clicar(fixture.nativeElement, 'registrar');
+    clicar(fixture.nativeElement, 'Registrar');
 
     const entrada = http.expectOne(`${apiUrl}/batidas/entrada`);
     expect(entrada.request.method).toBe('POST');
@@ -413,7 +413,7 @@ describe('ponto e fechamento', () => {
     const batida = formulario(fixture, 'Batida');
     preencher(batida, 'Início', '2026-10-06T08:00');
     preencher(batida, 'Fim', '2026-10-06T19:00');
-    clicar(fixture.nativeElement, 'registrar');
+    clicar(fixture.nativeElement, 'Registrar');
 
     const id = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
     http.expectOne(`${apiUrl}/batidas/entrada`).flush(JSON.stringify({ id }));
@@ -456,7 +456,7 @@ describe('ponto e fechamento', () => {
     http.expectOne(`${apiUrl}/espelho/${ana}/2026-10-06`).flush(JSON.stringify({ aprovado: false, trechos: [trecho()] }));
     fixture.detectChanges();
 
-    clicar(fixture.nativeElement, 'aprovar');
+    clicar(fixture.nativeElement, 'Aprovar');
     const aprovar = http.expectOne(`${apiUrl}/dias/${ana}/2026-10-06/aprovacao`);
     expect(aprovar.request.method).toBe('POST');
     expect(aprovar.request.headers.get('X-Papel')).toBe('Gestao');
@@ -465,7 +465,7 @@ describe('ponto e fechamento', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain('Cópia aprovada');
 
-    clicar(fixture.nativeElement, 'reabrir');
+    clicar(fixture.nativeElement, 'Reabrir');
     const reabrir = http.expectOne(`${apiUrl}/dias/${ana}/2026-10-06/aprovacao`);
     expect(reabrir.request.method).toBe('DELETE');
     reabrir.flush('');
@@ -483,7 +483,7 @@ describe('ponto e fechamento', () => {
     http.expectOne(`${apiUrl}/espelho/${ana}/2026-10-06`).flush(JSON.stringify({ aprovado: true, trechos: [trecho()] }));
     fixture.detectChanges();
 
-    clicar(fixture.nativeElement, 'exportar');
+    clicar(fixture.nativeElement, 'Exportar');
     await fixture.whenStable();
     expect(TestBed.inject(Router).url).toBe('/fechamento');
   });

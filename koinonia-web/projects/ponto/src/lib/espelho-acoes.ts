@@ -11,3 +11,14 @@ export function acoesDoEspelho(estado: EstadoEspelho, papel: Papel): string[] {
   }
   return estado === 'previa' ? ['aprovar'] : ['reabrir', 'exportar'];
 }
+
+const rotulos: Record<string, string> = {
+  registrar: 'Registrar',
+  aprovar: 'Aprovar',
+  reabrir: 'Reabrir',
+  exportar: 'Exportar',
+};
+
+export function rotuloDaAcao(acao: string): string {
+  return rotulos[acao] ?? acao;
+}
