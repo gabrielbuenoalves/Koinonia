@@ -202,12 +202,11 @@ function comFusoDeSaoPaulo(valor: string): string {
   standalone: true,
   imports: [PeriodoComponent],
   template: `
-    <h1 class="mb-4 text-xl">Fechamento</h1>
-    <section class="flex flex-col gap-4 rounded-xl bg-superficie p-6">
-      @if (erro) {
-        <p class="text-secundario">{{ erro }}</p>
-      }
-
+    <h1 class="mb-4 font-serif text-3xl">Fechamento</h1>
+    @if (erro) {
+      <p class="mb-4 text-secundario">{{ erro }}</p>
+    }
+    <section class="flex flex-col gap-4 rounded-2xl border border-trilho bg-superficie p-6">
       <form class="flex flex-col gap-4" aria-label="Fechamento" (submit)="baixar($event)">
         <ui-periodo
           tipo="date"
@@ -218,12 +217,12 @@ function comFusoDeSaoPaulo(valor: string): string {
         />
         <label class="flex flex-col gap-1 text-secundario">
           Formato
-          <select class="rounded-md bg-fundo px-3 py-2 text-texto" (change)="definirFormato($event)">
+          <select class="rounded-xl border border-trilho bg-campo px-3 py-2 text-texto" (change)="definirFormato($event)">
             <option value="csv">csv</option>
             <option value="excel">excel</option>
           </select>
         </label>
-        <button type="submit" class="rounded-md bg-acento px-4 py-2 text-texto">Baixar</button>
+        <button type="submit" class="w-fit rounded-full bg-acento px-4 py-2 text-sobre">Baixar</button>
       </form>
     </section>
   `,
