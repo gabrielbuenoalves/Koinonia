@@ -1,0 +1,4 @@
+# Regras do Projeto - Ecossistema Koinonia
+- Você DEVE seguir estritamente a metodologia do Superpowers.
+- NUNCA escreva código diretamente sem antes passar pelo Brainstorming e criar um plano detalhado (`writing-plans`).
+- Sempre siga o fluxo de Test-Driven Development (TDD) para qualquer nova funcionalidade.
