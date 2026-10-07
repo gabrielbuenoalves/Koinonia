@@ -382,6 +382,8 @@ describe('ponto e fechamento', () => {
     expect(fixture.nativeElement.textContent).toContain('360');
     expect(fixture.nativeElement.textContent).toContain('Regular');
     expect(fixture.nativeElement.querySelectorAll('button').length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelector('table')).not.toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('—');
 
     const batida = formulario(fixture, 'Batida');
     preencher(batida, 'Início', '2026-10-06T08:00');
@@ -509,7 +511,7 @@ describe('ponto e fechamento', () => {
     const ponto = TestBed.createComponent(PontoComponent);
     ponto.detectChanges();
     expect(ponto.nativeElement.querySelector('h1')?.textContent).toContain('Ponto');
-    expect(ponto.nativeElement.querySelector('h1')?.className).toContain('text-xl');
+    expect(ponto.nativeElement.querySelector('h1')?.className).toContain('font-serif');
     expect(ponto.nativeElement.querySelector('section')?.className).toContain('bg-superficie');
 
     const fechamento = TestBed.createComponent(FechamentoComponent);

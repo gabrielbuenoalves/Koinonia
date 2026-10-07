@@ -26,27 +26,32 @@ interface EspelhoResposta {
   standalone: true,
   imports: [CampoComponent, PeriodoComponent, EstadoVazioComponent, EspelhoComponent],
   template: `
-    <h1 class="mb-4 text-xl">Ponto</h1>
-    <section class="flex flex-col gap-4 rounded-xl bg-superficie p-6">
-      @if (erro) {
-        <p class="text-secundario">{{ erro }}</p>
-      }
-
-      <ui-campo rotulo="Funcionário" [valor]="funcionarioId" (valorChange)="funcionarioId = $event" />
-      <ui-campo rotulo="Dia" tipo="date" [valor]="dia" (valorChange)="dia = $event" />
-      <button type="button" class="rounded-md bg-acento px-4 py-2 text-texto" (click)="carregar()">Carregar</button>
-
-      <form class="flex flex-col gap-4" aria-label="Batida" (submit)="$event.preventDefault()">
-        <ui-periodo
-          tipo="datetime-local"
-          [inicio]="entrada"
-          [fim]="saida"
-          (inicioChange)="entrada = $event"
-          (fimChange)="saida = $event"
-        />
-      </form>
-
-      @if (carregado) {
+    <h1 class="mb-4 font-serif text-3xl">Ponto</h1>
+    @if (erro) {
+      <p class="mb-4 text-secundario">{{ erro }}</p>
+    }
+    <div class="grid gap-4 md:grid-cols-2">
+      <section class="flex flex-col gap-4 rounded-2xl border border-trilho bg-superficie p-6">
+        <p class="text-xs font-semibold uppercase tracking-widest text-acento">Consulta</p>
+        <ui-campo rotulo="Funcionário" [valor]="funcionarioId" (valorChange)="funcionarioId = $event" />
+        <ui-campo rotulo="Dia" tipo="date" [valor]="dia" (valorChange)="dia = $event" />
+        <button type="button" class="w-fit rounded-full bg-acento px-4 py-2 text-sobre" (click)="carregar()">Carregar</button>
+      </section>
+      <section class="rounded-2xl border border-trilho bg-superficie p-6">
+        <p class="text-xs font-semibold uppercase tracking-widest text-acento">Batida</p>
+        <form class="mt-4" aria-label="Batida" (submit)="$event.preventDefault()">
+          <ui-periodo
+            tipo="datetime-local"
+            [inicio]="entrada"
+            [fim]="saida"
+            (inicioChange)="entrada = $event"
+            (fimChange)="saida = $event"
+          />
+        </form>
+      </section>
+    </div>
+    @if (carregado) {
+      <section class="mt-4 rounded-2xl border border-trilho bg-superficie p-6">
         <ponto-espelho
           [estado]="estado"
           [papel]="papel"
@@ -55,21 +60,38 @@ interface EspelhoResposta {
         />
         @if (trechos.length === 0) {
           <ui-estado-vazio mensagem="Nenhum trecho neste dia." />
+        } @else {
+          <table class="mt-4 w-full border-collapse text-left text-sm">
+            <thead>
+              <tr class="text-xs uppercase tracking-wide text-secundario">
+                <th class="px-2 py-2 font-semibold">Início</th>
+                <th class="px-2 py-2 font-semibold">Fim</th>
+                <th class="px-2 py-2 font-semibold">Fatia</th>
+                <th class="px-2 py-2 font-semibold">Evento</th>
+                <th class="px-2 py-2 font-semibold">Percentual</th>
+                <th class="px-2 py-2 font-semibold">Fator</th>
+                <th class="px-2 py-2 font-semibold">Minutos trabalhados</th>
+                <th class="px-2 py-2 font-semibold">Minutos creditados</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (trecho of trechos; track $index) {
+                <tr class="border-t border-trilho">
+                  <td class="px-2 py-2">{{ trecho.inicio }}</td>
+                  <td class="px-2 py-2">{{ trecho.fim }}</td>
+                  <td class="px-2 py-2">{{ trecho.fatia }}</td>
+                  <td class="px-2 py-2">{{ trecho.evento ?? '—' }}</td>
+                  <td class="px-2 py-2">{{ trecho.percentual ?? '—' }}</td>
+                  <td class="px-2 py-2">{{ trecho.fator ?? '—' }}</td>
+                  <td class="px-2 py-2">{{ trecho.minutosTrabalhados }}</td>
+                  <td class="px-2 py-2">{{ trecho.minutosCreditados ?? '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
         }
-        @for (trecho of trechos; track $index) {
-          <p class="text-texto">
-            {{ trecho.inicio }}
-            {{ trecho.fim }}
-            {{ trecho.fatia }}
-            {{ trecho.evento }}
-            {{ trecho.percentual }}
-            {{ trecho.fator }}
-            {{ trecho.minutosTrabalhados }}
-            {{ trecho.minutosCreditados }}
-          </p>
-        }
-      }
-    </section>
+      </section>
+    }
   `,
 })
 export class PontoComponent {
