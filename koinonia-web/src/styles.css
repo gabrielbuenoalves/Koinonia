@@ -1,21 +1,31 @@
+@import "@fontsource/source-sans-3/400.css";
+@import "@fontsource/source-sans-3/600.css";
+@import "@fontsource/source-sans-3/700.css";
+@import "@fontsource/fraunces/400.css";
+@import "@fontsource/fraunces/600.css";
 @import "tailwindcss";
 @source "../projects/ui/src";
 @source "../projects/planejamento/src";
 @source "../projects/ponto/src";
 
 @theme {
-  --font-sans: "Segoe UI", sans-serif;
-  --color-fundo: #0c0b10;
-  --color-superficie: #17151f;
-  --color-texto: #f4f1ea;
-  --color-secundario: #a39bb0;
-  --color-acento: #7c5cbf;
+  --font-sans: "Source Sans 3", "Segoe UI", sans-serif;
+  --font-serif: "Fraunces", Georgia, serif;
+  --color-fundo: #f4efe6;
+  --color-superficie: #fffdf9;
+  --color-trilho: #efe6d8;
+  --color-texto: #2a241e;
+  --color-secundario: #74685c;
+  --color-acento: #6b2d3c;
+  --color-realce: #f6e6e8;
+  --color-campo: #ffffff;
+  --color-sobre: #fff8f4;
 }
 
 body {
   margin: 0;
   background: var(--color-fundo);
   color: var(--color-texto);
-  color-scheme: dark;
+  color-scheme: light;
   font-family: var(--font-sans);
 }

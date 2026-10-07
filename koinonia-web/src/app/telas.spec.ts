@@ -189,12 +189,13 @@ describe('campo e periodo', () => {
     const campo = TestBed.createComponent(CampoComponent);
     campo.componentInstance.rotulo = 'Nome';
     campo.detectChanges();
-    expect(campo.nativeElement.querySelector('input')?.className).toContain('bg-fundo');
+    expect(campo.nativeElement.querySelector('input')?.className).toContain('bg-campo');
     expect(campo.nativeElement.querySelector('input')?.className).toContain('text-texto');
 
     const periodo = TestBed.createComponent(PeriodoComponent);
     periodo.detectChanges();
-    expect(periodo.nativeElement.querySelector('input')?.className).toContain('bg-fundo');
+    expect(periodo.nativeElement.querySelector('input')?.className).toContain('bg-campo');
+    expect(periodo.nativeElement.querySelector('div')?.className).toContain('sm:grid-cols-2');
   });
 
   it('estado vazio usa o texto secundario', () => {

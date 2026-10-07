@@ -6,13 +6,15 @@ import { CampoComponent } from './campo.component';
   standalone: true,
   imports: [CampoComponent],
   template: `
-    <ui-campo
-      rotulo="Início"
-      [tipo]="tipo"
-      [valor]="inicio"
-      (valorChange)="inicioChange.emit($event)"
-    />
-    <ui-campo rotulo="Fim" [tipo]="tipo" [valor]="fim" (valorChange)="fimChange.emit($event)" />
+    <div class="grid gap-4 sm:grid-cols-2">
+      <ui-campo
+        rotulo="Início"
+        [tipo]="tipo"
+        [valor]="inicio"
+        (valorChange)="inicioChange.emit($event)"
+      />
+      <ui-campo rotulo="Fim" [tipo]="tipo" [valor]="fim" (valorChange)="fimChange.emit($event)" />
+    </div>
   `,
 })
 export class PeriodoComponent {
