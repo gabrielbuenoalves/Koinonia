@@ -1,18 +1,17 @@
 <div
-  class="min-h-screen bg-fundo font-sans text-texto"
-  [class.grid]="naEntrada()"
-  [class.place-items-center]="naEntrada()"
-  [class.flex]="!naEntrada()"
+  [class]="naEntrada()
+    ? 'grid min-h-screen place-items-center bg-fundo font-sans text-texto'
+    : 'flex min-h-screen flex-col bg-fundo font-sans text-texto md:flex-row'"
 >
   @if (!naEntrada()) {
-    <aside class="flex w-56 flex-col gap-2 bg-superficie p-4">
-      <p class="px-3 py-2 text-lg">Koinonia</p>
+    <aside class="flex flex-wrap gap-1 bg-trilho p-4 md:w-56 md:flex-col md:gap-2">
+      <p class="w-full px-3 py-2 font-serif text-2xl">Koinonia</p>
       @for (item of itens(); track item.rota) {
         <a
           [routerLink]="item.rota"
-          routerLinkActive="bg-acento"
+          routerLinkActive="bg-realce text-acento"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="rounded-md px-3 py-2"
+          class="rounded-full px-3 py-2 text-secundario"
         >
           {{ item.rotulo }}
         </a>
@@ -21,10 +20,10 @@
   }
   <div [class]="naEntrada() ? 'w-full max-w-md' : 'flex min-w-0 flex-1 flex-col'">
     @if (!naEntrada()) {
-      <header class="flex items-center justify-end gap-4 px-6 py-4">
-        <p>{{ rotuloPapel() }}</p>
-        <p>{{ funcionarioId() }}</p>
-        <button type="button" class="rounded-md px-3 py-2 text-secundario" (click)="sair()">Sair</button>
+      <header class="flex items-center justify-end gap-4 px-6 py-4 text-sm">
+        <p class="font-semibold">{{ rotuloPapel() }}</p>
+        <p class="text-secundario">{{ funcionarioId() }}</p>
+        <button type="button" class="rounded-full px-3 py-2 text-secundario" (click)="sair()">Sair</button>
       </header>
     }
     <main [class]="naEntrada() ? '' : 'px-6 pb-8'">

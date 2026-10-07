@@ -620,6 +620,23 @@ describe('entrada e visao geral', () => {
     expect(links).toContain('/fechamento');
     expect(fixture.nativeElement.textContent).toContain('Gestão');
     expect(fixture.nativeElement.textContent).toContain(ana);
+    const aside = fixture.nativeElement.querySelector('aside');
+    expect(aside.className).toContain('bg-trilho');
+    expect(aside.className).toContain('md:flex-col');
+    expect(aside.querySelector('p').className).toContain('font-serif');
+    const sair = [...fixture.nativeElement.querySelectorAll('button')].find(
+      (item) => (item as HTMLButtonElement).textContent?.trim() === 'Sair',
+    ) as HTMLButtonElement;
+    expect(sair.className).toContain('text-secundario');
+    expect(sair.className).not.toContain('bg-acento');
+  });
+
+  it('entrada usa titulo serif e o rotulo Casa', async () => {
+    const fixture = await abrirEntrada();
+    const titulo = fixture.nativeElement.querySelector('h1');
+    expect(titulo.textContent).toContain('Koinonia');
+    expect(titulo.className).toContain('font-serif');
+    expect(fixture.nativeElement.textContent).toContain('Casa');
   });
 
   it('o cartao da gestao abre ponto, planejamento e fechamento', async () => {
@@ -632,6 +649,12 @@ describe('entrada e visao geral', () => {
       '/planejamento',
       '/fechamento',
     ]);
+    const el = harness.routeNativeElement as HTMLElement;
+    const links = [...el.querySelectorAll('a')];
+    expect(el.querySelector('h1')?.className).toContain('font-serif');
+    expect(links[0].className).toContain('bg-acento');
+    expect(links[1].className).not.toContain('bg-acento');
+    expect(links[2].className).not.toContain('bg-acento');
   });
 
   it('o cartao do empregado abre so o ponto', async () => {

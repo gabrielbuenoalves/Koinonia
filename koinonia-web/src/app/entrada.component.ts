@@ -6,11 +6,12 @@ import { sessaoValida } from './sessao';
   selector: 'app-entrada',
   standalone: true,
   template: `
-    <form class="flex flex-col gap-4 rounded-xl bg-superficie p-6" aria-label="Entrar" (submit)="confirmar($event)">
-      <h1 class="text-xl">Koinonia</h1>
+    <form class="flex flex-col gap-4 rounded-2xl border border-trilho bg-superficie p-6" aria-label="Entrar" (submit)="confirmar($event)">
+      <p class="text-xs font-semibold uppercase tracking-widest text-acento">Casa</p>
+      <h1 class="font-serif text-4xl">Koinonia</h1>
       <label class="flex flex-col gap-1 text-secundario">
         Papel
-        <select class="rounded-md bg-fundo px-3 py-2 text-texto" [value]="papel" (change)="definirPapel($event)">
+        <select class="rounded-xl border border-trilho bg-campo px-3 py-2 text-texto" [value]="papel" (change)="definirPapel($event)">
           <option value=""></option>
           <option value="Gestao">Gestão</option>
           <option value="Empregado">Empregado</option>
@@ -18,12 +19,12 @@ import { sessaoValida } from './sessao';
       </label>
       <label class="flex flex-col gap-1 text-secundario">
         Identificador
-        <input class="rounded-md bg-fundo px-3 py-2 text-texto" [value]="identificador" (input)="definirIdentificador($event)" />
+        <input class="rounded-xl border border-trilho bg-campo px-3 py-2 text-texto" [value]="identificador" (input)="definirIdentificador($event)" />
       </label>
       @if (erro) {
         <p class="text-secundario">{{ erro }}</p>
       }
-      <button type="submit" class="rounded-md bg-acento px-4 py-2 text-texto">Entrar</button>
+      <button type="submit" class="rounded-full bg-acento px-4 py-2 text-sobre">Entrar</button>
     </form>
   `,
 })
